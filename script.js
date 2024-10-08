@@ -1,16 +1,26 @@
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const errorMessage = document.getElementById('errorMessage');
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-    // Check if username is "venki" and password is "123"
-    if (username === "venki" && password === "123") {
-        errorMessage.textContent = "";
-        // Redirect to the new page after successful login
-        window.location.href = "welcome.html";
-    } else {
-        errorMessage.textContent = "Invalid username or password!";
+@WebServlet("/LoginServlet")
+public class LoginServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        // Validate credentials
+        if ("venki".equals(username) && "123".equals(password)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("username", username);
+            response.sendRedirect("welcome.html"); // Redirect to the welcome page
+        } else {
+            response.sendRedirect("login.html?error=true"); // Redirect back to login with error
+        }
     }
-});
+}
